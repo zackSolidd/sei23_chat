@@ -15,6 +15,7 @@ import Navigation from "./component/Navigation";
 import PrivateRoute from "./component/PrivateRoute";
 import { Alert } from "react-bootstrap";
 
+const URL = process.env.REACT_APP_URL;
 export default class App extends Component {
   state = {
     items: [],
