@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-function Navigation({ user , logout}) {
+function Navigation({ user, logout }) {
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
       <Navbar.Brand href="/">React-Bootstrap</Navbar.Brand>
@@ -12,14 +12,19 @@ function Navigation({ user , logout}) {
           <Link className="nav-link" to="/">
             Home
           </Link>
+          {user && (
+            <>
+              <Link className="nav-link" to="/chat">
+                Chat
+              </Link>
+            </>
+          )}
         </Nav>
 
         <Nav>
           {user ? (
             <>
-              <Nav.Link href="#user">
-                {user.username}
-              </Nav.Link>
+              <Nav.Link href="#user">{user.username}</Nav.Link>
               <Link to="/logout" onClick={logout} className="nav-link">
                 Logout
               </Link>

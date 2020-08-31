@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 import {
   Switch,
   BrowserRouter as Router,
   Route,
   Redirect,
 } from "react-router-dom";
-import './App.css';
+import "./App.css";
 import Axios from "axios";
 import Register from "./component/auth/Register";
 import { decode } from "jsonwebtoken";
@@ -14,6 +14,7 @@ import Login from "./component/auth/Login";
 import Navigation from "./component/Navigation";
 import PrivateRoute from "./component/PrivateRoute";
 import { Alert } from "react-bootstrap";
+import ChatRoom from "./component/ChatRoom/ChatRoom";
 
 const URL = process.env.REACT_APP_URL;
 export default class App extends Component {
@@ -67,10 +68,10 @@ export default class App extends Component {
         localStorage.setItem("token", res.data.token);
         this.getUserProfile(res.data.token); //get uptodate user information
 
-        this.setState({
-          isAuth: true,
-          errorMessage: res.data.message,
-        });
+        // this.setState({
+        //   isAuth: true,
+        //   errorMessage: res.data.message,
+        // });
       })
       .catch((err) => {
         // console.log(err);
@@ -99,7 +100,6 @@ export default class App extends Component {
       });
   };
 
-
   componentDidMount() {
     let token = localStorage.getItem("token");
 
@@ -119,6 +119,7 @@ export default class App extends Component {
 
   render() {
     let { isAuth, user, errorMessage } = this.state;
+    console.log("appjs " + JSON.stringify(this.state.user));
     return (
       <Router>
         <Navigation user={user} logout={this.logoutHandler} />
@@ -129,7 +130,12 @@ export default class App extends Component {
             path="/register"
             exact
             render={() =>
-              isAuth ? (<Redirect to="/" />) : (<Register register={this.registerHandler} />)}
+              isAuth ? (
+                <Redirect to="/" />
+              ) : (
+                <Register register={this.registerHandler} />
+              )
+            }
           />
           <Route
             path="/login"
@@ -138,10 +144,9 @@ export default class App extends Component {
               isAuth ? <Redirect to="/" /> : <Login login={this.loginHandler} />
             }
           />
+          <Route path="/chat" exact render={() => <ChatRoom user={user} />} />
         </Switch>
       </Router>
     );
   }
 }
-
-
