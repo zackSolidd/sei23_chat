@@ -29,6 +29,11 @@ io.on('connection', (socket) => {
   })
 });
 
+app.use(function(req, res, next) {
+  req.io = io;
+  next();
+});
+
 //=== 404 errors
 app.get("*", (req, res) => {
     res.status(404).json({ message: "E404 : Page not found", code: "EB404" });

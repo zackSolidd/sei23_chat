@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const globalChatSchema = new mongoose.Schema(
   {
-    from: {
+    userid: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    body: {
+    message: {
       type: String,
       required: true,
     },

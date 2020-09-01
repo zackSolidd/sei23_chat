@@ -1,5 +1,7 @@
 const router = require("express").Router();
+const User = require("../model/user.model");
 const ChatRoom = require("../model/chatRoom.model");
+const GlobalChat = require("../model/globalChat.model");
 const checkToken = require("../config/config.js");
 
 //create new global chat room
@@ -23,32 +25,63 @@ router.post("/create", checkToken, async (req, res) => {
 
 //show chat room
 
-router.get("/show/:id", async (req, res) => {
-  try {
-    //Populate only includes the data from  cuisine collection and ownedBy collection
-    let chatRoom = await ChatRoom.findById(req.params.id);
+// router.get("/:id", async (req, res) => {
+//   try {
+//     let chatRoom = await ChatRoom.findById(req.params.id);
 
-    res.status(200).json({
-      message: "chatRoom found",
-      chatRoom,
+//     res.status(200).json({
+//       message: "chatRoom found",
+//       chatRoom,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Sorry, cannot find chat room ",
+//       statuscode: "EB500",
+//     });
+//   }
+// });
+
+//post message
+router.post("/postMessage", (req, res) => {
+  // console.log(req.body);
+    let message = new GlobalChat(req.body);
+
+    console.log(message);
+
+    // req.io.sockets.emit('message', "message");
+
+    message.save(err => {
+      if (err) {
+          console.log(err);
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ message: 'Failure' }));
+          res.sendStatus(500);
+      } else {
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ message: 'Success' }));
+      }
+  });
+});
+
+//show message
+router.get("/showchat", async (req, res) => {
+  try {
+    let chats = await GlobalChat.find()
+      .populate("userid");
+
+    res.status(200).send({
+      count: chats.length,
+      chats,
     });
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({
-      message: "Sorry, cannot find chat room ",
+      message: "1010101001111000111",
       statuscode: "EB500",
     });
   }
-  //   Restaurant.findById(req.params.id)
-  //     .populate("ownedBy")
-  //     .then((restaurant) => {
-  //       res.send(restaurant);
-  //     });
-
-  //   Restaurant.findById(req.params.id).then((restaurant) => {
-  //     User.findById(restaurant.ownedBy).then((user) => {
-  //       res.send(restaurant, user);
-  //     });
-  //   });
 });
+
+
+
 
 module.exports = router;

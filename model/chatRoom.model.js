@@ -13,11 +13,8 @@ const chatRoomSchema = new mongoose.Schema(
       {
         from: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-        body: {
-          type: String,
-        },
+          ref: "GlobalChat",
+        }
       },
     ],
   },

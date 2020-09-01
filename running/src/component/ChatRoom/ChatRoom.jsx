@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Form, Container, Button } from "react-bootstrap";
 import io from "socket.io-client";
+import Axios from "axios";
 
 const URL = process.env.REACT_APP_URL;
 const socket = io.connect("http://localhost:5555/");
 
 export default function ChatRoom(props) {
-  const [state, setState] = useState({ message: "", username: "" });
+  const [state, setState] = useState({ message: "", username: "", userid: "" });
   const [chat, setChat] = useState([]);
+  const [chatlog, setChatLog] = useState([])
+
+  useEffect(()=> {
+    Axios.get(`${URL}/chatroom/showchat`)
+    .then((res) => {
+      console.log(res.data.chats[0].userid.username);
+      setChatLog(res.data.chats);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  },[])
+
 
   useEffect(() => {
     if (props.user) {
-      setState({ username: `${props.user.username}`, message: "" });
-      console.log("chatroom useeffect " + JSON.stringify(props.user.username));
+      setState({ username: `${props.user.username}`, message: "", userid:`${props.user._id}` });
     }
   }, [props.user]);
 
@@ -30,10 +43,16 @@ export default function ChatRoom(props) {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    const { username, message } = state;
-    console.log(`dsads ${username}`);
-    socket.emit("message", { username, message });
-    setState({ message: "", username });
+    const { username, message, userid } = state;
+    socket.emit("message", { username, message, userid });
+    Axios.post(`${URL}/chatroom/postMessage`, state)
+    .then((res) => {
+      console.log("msg saved")
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    setState({ message: "", username, userid });
   };
 
   const renderChat = () => {
@@ -45,10 +64,22 @@ export default function ChatRoom(props) {
       </div>
     ));
   };
+
+  const renderPastChat = () => {
+    return chatlog.map(( chat, index) => (
+      <div key={index}>
+        <h3>
+          {chat.userid.username}: <span>{chat.message}</span>
+        </h3>
+      </div>
+    ));
+  };
+
   return (
     <div className="App">
       <div className="render-chat">
         <h1>Chat Log</h1>
+        {renderPastChat()}
         {renderChat()}
       </div>
       <Container>

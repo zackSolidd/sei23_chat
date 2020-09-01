@@ -119,7 +119,6 @@ export default class App extends Component {
 
   render() {
     let { isAuth, user, errorMessage } = this.state;
-    console.log("appjs " + JSON.stringify(this.state.user));
     return (
       <Router>
         <Navigation user={user} logout={this.logoutHandler} />
@@ -144,7 +143,13 @@ export default class App extends Component {
               isAuth ? <Redirect to="/" /> : <Login login={this.loginHandler} />
             }
           />
-          <Route path="/chat" exact render={() => <ChatRoom user={user} />} />
+          <Route
+            path="/chat"
+            exact
+            render={() =>
+              isAuth ? <ChatRoom user={user} /> : <Login login={this.loginHandler} />
+            }
+          />
         </Switch>
       </Router>
     );
