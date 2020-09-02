@@ -42,7 +42,7 @@ router.post("/create", checkToken, async (req, res) => {
 // });
 
 //post message
-router.post("/postMessage", (req, res) => {
+router.post("/postMessage", checkToken, (req, res) => {
   // console.log(req.body);
     let message = new GlobalChat(req.body);
 

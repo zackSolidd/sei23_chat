@@ -17,12 +17,19 @@ import { Alert } from "react-bootstrap";
 import ChatRoom from "./component/ChatRoom/ChatRoom";
 
 const URL = process.env.REACT_APP_URL;
+const iptoken = process.env.REACT_APP_INFO_TOKEN;
+const weather = process.env.REACT_APP_WEATHER;
 export default class App extends Component {
   state = {
     items: [],
     errorMessage: null,
     isAuth: false,
     user: null,
+    city: "",
+    country: "",
+    weather: { temp: "", temp_max: "", temp_min: "" },
+    businessNews: { news1: {}, news2: {}, news3: {} },
+    sportsNews: { sportsnews1: {}, sportsnews2: {}, sportsnews3: {} },
   };
 
   logoutHandler = (e) => {
@@ -85,7 +92,7 @@ export default class App extends Component {
     //login here
     Axios.post(`${URL}/auth/register`, credentials)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
 
         localStorage.setItem("token", res.data.token);
         this.setState({
@@ -97,6 +104,66 @@ export default class App extends Component {
         this.setState({
           isAuth: false,
         });
+      });
+  };
+
+  getUserCity = () => {
+    Axios.get(`https://ipinfo.io/?token=${iptoken}`)
+      .then((res) => {
+        this.setState({ city: res.data.city });
+        this.setState({ country: res.data.country });
+        // console.log(res.data)
+        Axios.get(
+          `http://api.openweathermap.org/data/2.5/weather?q=${res.data.city}&appid=${weather}&units=metric`
+        )
+          .then((res) => {
+            // console.log(res.data.main);
+            this.setState({
+              weather: {
+                temp: res.data.main.temp,
+                temp_max: res.data.main.temp_max,
+                temp_min: res.data.main.temp_min,
+              },
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        Axios.get(
+          `http://newsapi.org/v2/top-headlines?country=${res.data.country}&category=business&apiKey=7a75599c314743819872cc831570d629`
+        )
+          .then((res) => {
+            // console.log(res.data);
+            this.setState({
+              businessNews: {
+                news1: res.data.articles[0],
+                news2: res.data.articles[1],
+                news3: res.data.articles[2],
+              },
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+          Axios.get(
+            `http://newsapi.org/v2/top-headlines?country=${res.data.country}&category=sports&apiKey=7a75599c314743819872cc831570d629`
+          )
+            .then((res) => {
+              //  console.log(res.data);
+              this.setState({
+                sportsNews: {
+                  sportsnews1: res.data.articles[0],
+                  sportsnews2: res.data.articles[1],
+                  sportsnews3: res.data.articles[2],
+                },
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            }); 
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -115,8 +182,8 @@ export default class App extends Component {
         // });
       }
     }
+    this.getUserCity();
   }
-
   render() {
     let { isAuth, user, errorMessage } = this.state;
     return (
@@ -124,7 +191,18 @@ export default class App extends Component {
         <Navigation user={user} logout={this.logoutHandler} />
         {errorMessage && <Alert>{errorMessage}</Alert>}
         <Switch>
-          <PrivateRoute exact path="/" isAuth={isAuth} component={Home} />
+          <PrivateRoute
+            exact
+            path="/"
+            isAuth={isAuth}
+            component={Home}
+            weather={this.state.weather}
+            user={user}
+            city={this.state.city}
+            country={this.state.country}
+            businessNews={this.state.businessNews}
+            sportsNews={this.state.sportsNews}
+          />
           <Route
             path="/register"
             exact
@@ -147,7 +225,11 @@ export default class App extends Component {
             path="/chat"
             exact
             render={() =>
-              isAuth ? <ChatRoom user={user} /> : <Login login={this.loginHandler} />
+              isAuth ? (
+                <ChatRoom user={user} />
+              ) : (
+                <Login login={this.loginHandler} />
+              )
             }
           />
         </Switch>

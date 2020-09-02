@@ -9,23 +9,26 @@ const socket = io.connect("http://localhost:5555/");
 export default function ChatRoom(props) {
   const [state, setState] = useState({ message: "", username: "", userid: "" });
   const [chat, setChat] = useState([]);
-  const [chatlog, setChatLog] = useState([])
+  const [chatlog, setChatLog] = useState([]);
 
-  useEffect(()=> {
+  useEffect(() => {
     Axios.get(`${URL}/chatroom/showchat`)
-    .then((res) => {
-      console.log(res.data.chats[0].userid.username);
-      setChatLog(res.data.chats);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  },[])
-
+      .then((res) => {
+        console.log(res.data.chats[0].userid.username);
+        setChatLog(res.data.chats);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   useEffect(() => {
     if (props.user) {
-      setState({ username: `${props.user.username}`, message: "", userid:`${props.user._id}` });
+      setState({
+        username: `${props.user.username}`,
+        message: "",
+        userid: `${props.user._id}`,
+      });
     }
   }, [props.user]);
 
@@ -45,13 +48,18 @@ export default function ChatRoom(props) {
     e.preventDefault();
     const { username, message, userid } = state;
     socket.emit("message", { username, message, userid });
-    Axios.post(`${URL}/chatroom/postMessage`, state)
-    .then((res) => {
-      console.log("msg saved")
+    let token = localStorage.getItem("token");
+    Axios.post(`${URL}/chatroom/postMessage`, state, {
+      headers: {
+        "x-auth-token": token,
+      },
     })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((res) => {
+        console.log("msg saved");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     setState({ message: "", username, userid });
   };
 
@@ -66,7 +74,7 @@ export default function ChatRoom(props) {
   };
 
   const renderPastChat = () => {
-    return chatlog.map(( chat, index) => (
+    return chatlog.map((chat, index) => (
       <div key={index}>
         <h3>
           {chat.userid.username}: <span>{chat.message}</span>
