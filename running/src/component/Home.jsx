@@ -91,14 +91,17 @@ export default class Home extends Component {
               </CardDeck>
             </Col>
           </Row>
-          <Row className= 'mt-4'>
+          <Row className="mt-4">
             <h3>Sport News</h3>
           </Row>
           <Row>
             <Col>
               <CardDeck>
                 <Card>
-                  <Card.Img variant="top" src={this.props.sportsnews1.urlToImage} />
+                  <Card.Img
+                    variant="top"
+                    src={this.props.sportsnews1.urlToImage}
+                  />
                   <Card.Body>
                     <Card.Title>{this.props.sportsnews1.title}</Card.Title>
                     <Card.Text>
@@ -119,7 +122,10 @@ export default class Home extends Component {
                   </Card.Footer>
                 </Card>
                 <Card>
-                  <Card.Img variant="top" src={this.props.sportsnews2.urlToImage} />
+                  <Card.Img
+                    variant="top"
+                    src={this.props.sportsnews2.urlToImage}
+                  />
                   <Card.Body>
                     <Card.Title>{this.props.sportsnews2.title}</Card.Title>
                     <Card.Text>
@@ -140,7 +146,10 @@ export default class Home extends Component {
                   </Card.Footer>
                 </Card>
                 <Card>
-                  <Card.Img variant="top" src={this.props.sportsnews3.urlToImage} />
+                  <Card.Img
+                    variant="top"
+                    src={this.props.sportsnews3.urlToImage}
+                  />
                   <Card.Body>
                     <Card.Title>{this.props.sportsnews3.title}</Card.Title>
                     <Card.Text>
@@ -154,6 +163,87 @@ export default class Home extends Component {
                       Last updated{" "}
                       <Moment
                         date={this.props.sportsnews3.publishedAt}
+                        durationFromNow
+                      />{" "}
+                      hours ago
+                    </small>
+                  </Card.Footer>
+                </Card>
+              </CardDeck>
+            </Col>
+          </Row>
+          <Row className="mt-4">
+            <h3>Tech News</h3>
+          </Row>
+          <Row>
+            <Col>
+              <CardDeck>
+                <Card>
+                  <Card.Img
+                    variant="top"
+                    src={this.props.technews1.urlToImage}
+                  />
+                  <Card.Body>
+                    <Card.Title>{this.props.technews1.title}</Card.Title>
+                    <Card.Text>
+                      <a href={this.props.technews1.url}>
+                        {this.props.technews1.description}
+                      </a>
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Footer>
+                    <small className="text-muted">
+                      Last updated{" "}
+                      <Moment
+                        date={this.props.technews1.publishedAt}
+                        durationFromNow
+                      />{" "}
+                      hours ago
+                    </small>
+                  </Card.Footer>
+                </Card>
+                <Card>
+                  <Card.Img
+                    variant="top"
+                    src={this.props.technews2.urlToImage}
+                  />
+                  <Card.Body>
+                    <Card.Title>{this.props.technews2.title}</Card.Title>
+                    <Card.Text>
+                      <a href={this.props.technews2.url}>
+                        {this.props.technews2.description}
+                      </a>
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Footer>
+                    <small className="text-muted">
+                      Last updated{" "}
+                      <Moment
+                        date={this.props.technews2.publishedAt}
+                        durationFromNow
+                      />{" "}
+                      hours ago
+                    </small>
+                  </Card.Footer>
+                </Card>
+                <Card>
+                  <Card.Img
+                    variant="top"
+                    src={this.props.technews3.urlToImage}
+                  />
+                  <Card.Body>
+                    <Card.Title>{this.props.technews3.title}</Card.Title>
+                    <Card.Text>
+                      <a href={this.props.technews3.url}>
+                        {this.props.technews3.description}
+                      </a>
+                    </Card.Text>
+                  </Card.Body>
+                  <Card.Footer>
+                    <small className="text-muted">
+                      Last updated{" "}
+                      <Moment
+                        date={this.props.technews3.publishedAt}
                         durationFromNow
                       />{" "}
                       hours ago

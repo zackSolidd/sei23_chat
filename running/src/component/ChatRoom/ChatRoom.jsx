@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Container, Button } from "react-bootstrap";
 import io from "socket.io-client";
 import Axios from "axios";
+import { animateScroll } from "react-scroll";
 
 const URL = process.env.REACT_APP_URL;
 const socket = io.connect("http://localhost:5555/");
@@ -16,6 +17,7 @@ export default function ChatRoom(props) {
       .then((res) => {
         console.log(res.data.chats[0].userid.username);
         setChatLog(res.data.chats);
+        scrollToBottom();
       })
       .catch((err) => {
         console.log(err);
@@ -37,6 +39,7 @@ export default function ChatRoom(props) {
       socket.on("message", ({ username, message }) => {
         setChat([...chat, { username, message }]);
       });
+      scrollToBottom();
     }
   });
 
@@ -63,6 +66,18 @@ export default function ChatRoom(props) {
     setState({ message: "", username, userid });
   };
 
+  const scrollToBottom = () => {
+    animateScroll.scrollToBottom({
+      containerId: "chatbox",
+    });
+  };
+
+  const onEnter = (e) => {
+    if (e.key === "Enter") {
+      sendMessage(e);
+    }
+  }
+
   const renderChat = () => {
     return chat.map(({ username, message }, index) => (
       <div key={index}>
@@ -85,12 +100,12 @@ export default function ChatRoom(props) {
 
   return (
     <div className="App">
-      <div className="render-chat">
-        <h1>Chat Log</h1>
-        {renderPastChat()}
-        {renderChat()}
-      </div>
       <Container>
+        <h1>Global Chat</h1>
+        <div className="render-chat" id="chatbox">
+          {renderPastChat()}
+          {renderChat()}
+        </div>
         <Form.Control
           size="lg"
           type="text"
@@ -99,6 +114,8 @@ export default function ChatRoom(props) {
           onChange={(e) => onTextChange(e)}
           value={state.message}
           label="Message"
+          autoFocus={true}
+          onKeyPress={onEnter}
         ></Form.Control>
         <Button onClick={sendMessage}>Send Message</Button>
       </Container>

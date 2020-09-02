@@ -12,3 +12,16 @@ code {
     monospace;
 }
 
+.render-chat {
+  height: 250px;
+  width: 1100px;
+  overflow: auto;
+  text-align: left;
+  margin: 10px;
+  scroll-behavior: smooth;
+}
+
+.ROOT_CSS {
+  height: 600;
+  width: 400;
+}

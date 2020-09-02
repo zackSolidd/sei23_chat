@@ -19,6 +19,7 @@ import ChatRoom from "./component/ChatRoom/ChatRoom";
 const URL = process.env.REACT_APP_URL;
 const iptoken = process.env.REACT_APP_INFO_TOKEN;
 const weather = process.env.REACT_APP_WEATHER;
+const newsapi = process.env.REACT_APP_NEWSAPI
 export default class App extends Component {
   state = {
     items: [],
@@ -30,6 +31,7 @@ export default class App extends Component {
     weather: { temp: "", temp_max: "", temp_min: "" },
     businessNews: { news1: {}, news2: {}, news3: {} },
     sportsNews: { sportsnews1: {}, sportsnews2: {}, sportsnews3: {} },
+    techNews: { technews1: {}, technews2: {}, technews3: {} },
   };
 
   logoutHandler = (e) => {
@@ -130,7 +132,7 @@ export default class App extends Component {
             console.log(err);
           });
         Axios.get(
-          `http://newsapi.org/v2/top-headlines?country=${res.data.country}&category=business&apiKey=7a75599c314743819872cc831570d629`
+          `http://newsapi.org/v2/top-headlines?country=${res.data.country}&category=business&apiKey=${newsapi}`
         )
           .then((res) => {
             // console.log(res.data);
@@ -145,22 +147,38 @@ export default class App extends Component {
           .catch((err) => {
             console.log(err);
           });
-          Axios.get(
-            `http://newsapi.org/v2/top-headlines?country=${res.data.country}&category=sports&apiKey=7a75599c314743819872cc831570d629`
-          )
-            .then((res) => {
-              //  console.log(res.data);
-              this.setState({
-                sportsNews: {
-                  sportsnews1: res.data.articles[0],
-                  sportsnews2: res.data.articles[1],
-                  sportsnews3: res.data.articles[2],
-                },
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-            }); 
+        Axios.get(
+          `http://newsapi.org/v2/top-headlines?country=${res.data.country}&category=sports&apiKey=${newsapi}`
+        )
+          .then((res) => {
+            //  console.log(res.data);
+            this.setState({
+              sportsNews: {
+                sportsnews1: res.data.articles[0],
+                sportsnews2: res.data.articles[1],
+                sportsnews3: res.data.articles[2],
+              },
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        Axios.get(
+          `https://newsapi.org/v1/articles?source=the-verge&apiKey=${newsapi}`
+        )
+          .then((res) => {
+            //  console.log(res.data);
+            this.setState({
+              techNews: {
+                technews1: res.data.articles[0],
+                technews2: res.data.articles[1],
+                technews3: res.data.articles[2],
+              },
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -202,6 +220,7 @@ export default class App extends Component {
             country={this.state.country}
             businessNews={this.state.businessNews}
             sportsNews={this.state.sportsNews}
+            techNews={this.state.techNews}
           />
           <Route
             path="/register"
