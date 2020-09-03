@@ -6,6 +6,7 @@ var cors = require('cors');
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
+
 //=== add all middlewares
 app.use(cors());
     /* 
@@ -23,11 +24,14 @@ app.use("/api/globalchatroom", require("./routes/globalchat.route"));
 
 
 // socket.io 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
+
   socket.on('message', ({username,message})=> {
     io.emit('message', {username, message})
   })
+  
 });
+
 
 app.use(function(req, res, next) {
   req.io = io;

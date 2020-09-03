@@ -5,7 +5,7 @@ import Axios from "axios";
 import { animateScroll } from "react-scroll";
 
 const URL = process.env.REACT_APP_URL;
-const socket = io.connect("http://localhost:5555/");
+const socket = io.connect(process.env.REACT_APP_CHAT_LOCALHOST_URL);
 
 export default function ChatRoom(props) {
   const [state, setState] = useState({ message: "", username: "", userid: "" });
@@ -76,14 +76,14 @@ export default function ChatRoom(props) {
     if (e.key === "Enter") {
       sendMessage(e);
     }
-  }
+  };
 
   const renderChat = () => {
     return chat.map(({ username, message }, index) => (
       <div key={index}>
-        <h3>
+        <h5>
           {username}: <span>{message}</span>
-        </h3>
+        </h5>
       </div>
     ));
   };
@@ -91,9 +91,9 @@ export default function ChatRoom(props) {
   const renderPastChat = () => {
     return chatlog.map((chat, index) => (
       <div key={index}>
-        <h3>
+        <h5>
           {chat.userid.username}: <span>{chat.message}</span>
-        </h3>
+        </h5>
       </div>
     ));
   };

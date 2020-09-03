@@ -97,6 +97,7 @@ export default class App extends Component {
         // console.log(res.data);
 
         localStorage.setItem("token", res.data.token);
+        this.getUserProfile(res.data.token);
         this.setState({
           isAuth: true,
         });
