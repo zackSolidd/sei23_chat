@@ -20,7 +20,7 @@ app.use(express.json()); //allows me to receive JSON files from HEADER of REQUES
 app.use("/api/auth", require("./routes/auth.route"));
 app.use("/api/chatroom", require("./routes/chatRoom.route"));
 app.use("/api/globalchatroom", require("./routes/globalchat.route"));
-app.use(express.static(path.join(__dirname, "client", "build")));
+app.use(express.static(path.join(__dirname, "running", "build")));
 
 // socket.io
 io.on("connection", async (socket) => {
