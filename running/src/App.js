@@ -118,7 +118,7 @@ export default class App extends Component {
         this.setState({ country: res.data.country });
         // console.log(res.data)
         Axios.get(
-          `http://api.openweathermap.org/data/2.5/weather?q=${res.data.city}&appid=${weather}&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?q=${res.data.city}&appid=${weather}&units=metric`
         )
           .then((res) => {
             // console.log(res.data.main);
@@ -134,7 +134,7 @@ export default class App extends Component {
             console.log(err);
           });
         Axios.get(
-          `http://newsapi.org/v2/top-headlines?country=${res.data.country}&category=business&apiKey=${newsapi}`
+          `https://newsapi.org/v2/top-headlines?country=${res.data.country}&category=business&apiKey=${newsapi}`
         )
           .then((res) => {
             // console.log(res.data);
@@ -150,7 +150,7 @@ export default class App extends Component {
             console.log(err);
           });
         Axios.get(
-          `http://newsapi.org/v2/top-headlines?country=${res.data.country}&category=sports&apiKey=${newsapi}`
+          `https://newsapi.org/v2/top-headlines?country=${res.data.country}&category=sports&apiKey=${newsapi}`
         )
           .then((res) => {
             //  console.log(res.data);
